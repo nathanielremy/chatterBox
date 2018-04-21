@@ -8,20 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		443E9864208BBC41008A833B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9863208BBC41008A833B /* AppDelegate.swift */; };
-		443E9866208BBC41008A833B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9865208BBC41008A833B /* ViewController.swift */; };
+		443E9866208BBC41008A833B /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9865208BBC41008A833B /* LoginVC.swift */; };
 		443E9869208BBC41008A833B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 443E9867208BBC41008A833B /* Main.storyboard */; };
 		443E986B208BBC41008A833B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 443E986A208BBC41008A833B /* Assets.xcassets */; };
 		443E986E208BBC41008A833B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 443E986C208BBC41008A833B /* LaunchScreen.storyboard */; };
+		443E9876208BBCE7008A833B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443E9875208BBCE7008A833B /* GoogleService-Info.plist */; };
+		D1A5D8435E7FC5F3ADD704CC /* Pods_ChatterBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		443E9860208BBC41008A833B /* ChatterBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatterBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		443E9863208BBC41008A833B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		443E9865208BBC41008A833B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		443E9865208BBC41008A833B /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		443E9868208BBC41008A833B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		443E986A208BBC41008A833B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		443E986D208BBC41008A833B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		443E986F208BBC41008A833B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		443E9875208BBCE7008A833B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatterBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEB378B4D4A285CE9B25A602 /* Pods-ChatterBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatterBox.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox.release.xcconfig"; sourceTree = "<group>"; };
+		F897670C7BDBC3FBD0146A6A /* Pods-ChatterBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatterBox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +35,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1A5D8435E7FC5F3ADD704CC /* Pods_ChatterBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		065E3520003A69444013D782 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		443E9857208BBC41008A833B = {
 			isa = PBXGroup;
 			children = (
 				443E9862208BBC41008A833B /* ChatterBox */,
 				443E9861208BBC41008A833B /* Products */,
+				C9E3A6E811AD02DB51FE9B9D /* Pods */,
+				065E3520003A69444013D782 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -55,13 +72,39 @@
 			isa = PBXGroup;
 			children = (
 				443E9863208BBC41008A833B /* AppDelegate.swift */,
-				443E9865208BBC41008A833B /* ViewController.swift */,
-				443E9867208BBC41008A833B /* Main.storyboard */,
-				443E986A208BBC41008A833B /* Assets.xcassets */,
-				443E986C208BBC41008A833B /* LaunchScreen.storyboard */,
+				443E9865208BBC41008A833B /* LoginVC.swift */,
+				4480CD86208BBDA1005A6C75 /* Views */,
+				443E9877208BBCF0008A833B /* SupportingFiles */,
 				443E986F208BBC41008A833B /* Info.plist */,
 			);
 			path = ChatterBox;
+			sourceTree = "<group>";
+		};
+		443E9877208BBCF0008A833B /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				443E9875208BBCE7008A833B /* GoogleService-Info.plist */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		4480CD86208BBDA1005A6C75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				443E986C208BBC41008A833B /* LaunchScreen.storyboard */,
+				443E9867208BBC41008A833B /* Main.storyboard */,
+				443E986A208BBC41008A833B /* Assets.xcassets */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C9E3A6E811AD02DB51FE9B9D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F897670C7BDBC3FBD0146A6A /* Pods-ChatterBox.debug.xcconfig */,
+				DEB378B4D4A285CE9B25A602 /* Pods-ChatterBox.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +114,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 443E9872208BBC41008A833B /* Build configuration list for PBXNativeTarget "ChatterBox" */;
 			buildPhases = (
+				371AE1235F6B45ADED72091B /* [CP] Check Pods Manifest.lock */,
 				443E985C208BBC41008A833B /* Sources */,
 				443E985D208BBC41008A833B /* Frameworks */,
 				443E985E208BBC41008A833B /* Resources */,
+				8FF5507E837A7FCB2310A022 /* [CP] Embed Pods Frameworks */,
+				5FA394D61391609D9C0CAC51 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -126,17 +172,78 @@
 				443E986E208BBC41008A833B /* LaunchScreen.storyboard in Resources */,
 				443E986B208BBC41008A833B /* Assets.xcassets in Resources */,
 				443E9869208BBC41008A833B /* Main.storyboard in Resources */,
+				443E9876208BBCE7008A833B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		371AE1235F6B45ADED72091B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChatterBox-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5FA394D61391609D9C0CAC51 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8FF5507E837A7FCB2310A022 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		443E985C208BBC41008A833B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				443E9866208BBC41008A833B /* ViewController.swift in Sources */,
+				443E9866208BBC41008A833B /* LoginVC.swift in Sources */,
 				443E9864208BBC41008A833B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,6 +379,7 @@
 		};
 		443E9873208BBC41008A833B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F897670C7BDBC3FBD0146A6A /* Pods-ChatterBox.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -287,6 +395,7 @@
 		};
 		443E9874208BBC41008A833B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DEB378B4D4A285CE9B25A602 /* Pods-ChatterBox.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
