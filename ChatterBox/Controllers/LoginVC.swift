@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginVC: UIViewController {
     
@@ -18,7 +19,7 @@ class LoginVC: UIViewController {
         return iv
     }()
     
-    let nameTextFild: UITextField = {
+    let nameTextField: UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
         tf.placeholder = "Name"
@@ -28,7 +29,7 @@ class LoginVC: UIViewController {
         return tf
     }()
     
-    let emailTextFild: UITextField = {
+    let emailTextField: UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
         tf.placeholder = "Email"
@@ -38,7 +39,7 @@ class LoginVC: UIViewController {
         return tf
     }()
     
-    let passwordTextFild: UITextField = {
+    let passwordTextField: UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
         tf.isSecureTextEntry = true
@@ -61,7 +62,31 @@ class LoginVC: UIViewController {
     }()
     
     @objc fileprivate func handleRegisterButton() {
-        print("Register button")
+        guard let inputs = areInputsValid() else {
+            print("OOOOps login inputs are not valid"); return
+        }
+        
+        Auth.auth().createUser(withEmail: inputs.email, password: inputs.password) { (userr, err) in
+            if let error = err {
+                print("Could not creat account... Error: ", error); return
+            }
+            guard let user = userr else {
+                print("Could not creat account... Error: No user returned"); return
+            }
+            
+            let userValues = ["name" : inputs.name, "email" : inputs.email]
+            let values: [String : Any] = [user.uid : userValues]
+            
+            let databaseRef = Database.database().reference().child("users")
+            databaseRef.updateChildValues(values, withCompletionBlock: { (err, _) in
+                if let error = err {
+                    print("Error uploading user's values to database: ", error)
+                }
+                
+                print("Successfuly uploaded user's values to database.")
+            })
+            
+        }
     }
     
     override func viewDidLoad() {
@@ -71,8 +96,17 @@ class LoginVC: UIViewController {
         setupViews()
     }
     
+    fileprivate func areInputsValid() -> (name: String, email: String, password: String)? {
+        
+        guard let name = nameTextField.text, name.count > 0 else { return nil }
+        guard let email = emailTextField.text, email.count > 0 else { return nil }
+        guard let password = passwordTextField.text, password.count > 5 else { return nil }
+        
+        return (name, email, password)
+    }
+    
     fileprivate func setupViews() {
-        let stackView = UIStackView(arrangedSubviews: [nameTextFild, emailTextFild, passwordTextFild])
+        let stackView = UIStackView(arrangedSubviews: [nameTextField, emailTextField, passwordTextField])
         stackView.axis = .vertical
         stackView.spacing = 0
         stackView.distribution = .fillEqually
