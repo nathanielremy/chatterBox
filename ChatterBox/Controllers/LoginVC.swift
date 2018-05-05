@@ -9,18 +9,47 @@
 import UIKit
 import Firebase
 
-class LoginVC: UIViewController {
+class LoginVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     //MARK: Stored properties
     var stackViewHeight: CGFloat = 150
     
-    let profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = #imageLiteral(resourceName: "gameofthrones_splash").withRenderingMode(.alwaysOriginal)
         iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleImageViewTap))
+        iv.addGestureRecognizer(tapGesture)
         
         return iv
     }()
+    
+    @objc fileprivate func handleImageViewTap() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = true
+        imagePicker.delegate = self
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        var selectedImage: UIImage?
+        
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImage = editedImage
+        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            selectedImage = originalImage
+        }
+        
+        if let image = selectedImage {
+            profileImageView.image = image
+            profileImageView.layer.cornerRadius = 150/2
+        }
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
     
     lazy var segmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
@@ -122,18 +151,46 @@ class LoginVC: UIViewController {
                 print("Could not creat account... Error: No user returned"); return
             }
             
-            let userValues = ["name" : inputs.name, "email" : inputs.email]
-            let values: [String : Any] = [user.uid : userValues]
+            guard let image = self.profileImageView.image, let uploadData = UIImageJPEGRepresentation(image, 0.3) else {
+                print("Error converting image to JPEG..."); return
+            }
             
-            let databaseRef = Database.database().reference().child("users")
-            databaseRef.updateChildValues(values, withCompletionBlock: { (err, _) in
+            let randomFileName = UUID().uuidString
+            
+            let storageRef = Storage.storage().reference().child("profile_images").child(randomFileName)
+            storageRef.putData(uploadData, metadata: nil, completion: { (metaData, err) in
+                
                 if let error = err {
-                    print("Error uploading user's values to database: ", error)
+                    print("Error puting profileImage into Firebase Storage: ", error); return
                 }
                 
-                self.dismiss(animated: true, completion: nil)
+                guard let metadata = metaData, let profileImageURLString = metadata.downloadURL()?.absoluteString else {
+                    print("No downloadURL returned from metaData for profileImage"); return
+                }
+                
+                let userValues: [String : Any] = ["name" : inputs.name, "email" : inputs.email, "profileImageURLString" : profileImageURLString]
+                let values: [String : Any] = [user.uid : userValues]
+                
+                self.registerUserIntoDatabase(withUId: user.uid, values: values)
             })
         }
+    }
+    
+    fileprivate func registerUserIntoDatabase(withUId Uid: String, values: [String : Any]) {
+        
+        let databaseRef = Database.database().reference().child("users")
+        databaseRef.updateChildValues(values, withCompletionBlock: { (err, _) in
+            if let error = err {
+                print("Error uploading user's values to database: ", error)
+            }
+            
+            self.dismiss(animated: true, completion: nil)
+        })
+        
+        
+        
+        
+        
     }
     
     override func viewDidLoad() {
