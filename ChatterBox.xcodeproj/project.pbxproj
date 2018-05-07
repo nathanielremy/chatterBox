@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4435DC4020A0BC09002ED43E /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4435DC3F20A0BC09002ED43E /* CustomImageView.swift */; };
 		443E9864208BBC41008A833B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9863208BBC41008A833B /* AppDelegate.swift */; };
 		443E9866208BBC41008A833B /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9865208BBC41008A833B /* MessagesVC.swift */; };
 		443E9869208BBC41008A833B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 443E9867208BBC41008A833B /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4435DC3F20A0BC09002ED43E /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		443E9860208BBC41008A833B /* ChatterBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatterBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		443E9863208BBC41008A833B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		443E9865208BBC41008A833B /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				4444FFF9209231A000E5FFED /* Extensions.swift */,
+				4435DC3F20A0BC09002ED43E /* CustomImageView.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				447610C020A0848F002A6521 /* NewMessageTableVC.swift in Sources */,
+				4435DC4020A0BC09002ED43E /* CustomImageView.swift in Sources */,
 				443E9866208BBC41008A833B /* MessagesVC.swift in Sources */,
 				443E9864208BBC41008A833B /* AppDelegate.swift in Sources */,
 				4444FFF7209230A500E5FFED /* LoginVC.swift in Sources */,

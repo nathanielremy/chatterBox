@@ -30,11 +30,11 @@ class MessagesVC: UITableViewController {
             
             Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (dataSnapshot) in
                 
-                guard let snapshot = dataSnapshot.value as? [String : Any], let key = dataSnapshot.key as? String else {
+                guard let snapshot = dataSnapshot.value as? [String : Any] else {
                     print("Could not convert dataSnapshot elements"); return
                 }
                 
-                let user = User(uid: key, dictionary: snapshot)
+                let user = User(uid: dataSnapshot.key, dictionary: snapshot)
                 
                 DispatchQueue.main.async {
                     self.navigationItem.title = user.name
