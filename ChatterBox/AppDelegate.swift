@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         guard let window = window else { fatalError() }
         
-        window.rootViewController = UINavigationController(rootViewController: MainVC())
+        window.rootViewController = UINavigationController(rootViewController: MessagesVC())
         
         return true
     }

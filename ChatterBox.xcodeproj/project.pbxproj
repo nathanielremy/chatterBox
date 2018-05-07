@@ -8,20 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		443E9864208BBC41008A833B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9863208BBC41008A833B /* AppDelegate.swift */; };
-		443E9866208BBC41008A833B /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9865208BBC41008A833B /* MainVC.swift */; };
+		443E9866208BBC41008A833B /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9865208BBC41008A833B /* MessagesVC.swift */; };
 		443E9869208BBC41008A833B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 443E9867208BBC41008A833B /* Main.storyboard */; };
 		443E986B208BBC41008A833B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 443E986A208BBC41008A833B /* Assets.xcassets */; };
 		443E986E208BBC41008A833B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 443E986C208BBC41008A833B /* LaunchScreen.storyboard */; };
 		443E9876208BBCE7008A833B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443E9875208BBCE7008A833B /* GoogleService-Info.plist */; };
 		4444FFF7209230A500E5FFED /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444FFF6209230A500E5FFED /* LoginVC.swift */; };
 		4444FFFA209231A000E5FFED /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444FFF9209231A000E5FFED /* Extensions.swift */; };
+		447610BE20A08333002A6521 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447610BD20A08333002A6521 /* User.swift */; };
+		447610C020A0848F002A6521 /* NewMessageTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447610BF20A0848F002A6521 /* NewMessageTableVC.swift */; };
+		447610C320A086BD002A6521 /* NewMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447610C220A086BD002A6521 /* NewMessageTableViewCell.swift */; };
 		D1A5D8435E7FC5F3ADD704CC /* Pods_ChatterBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		443E9860208BBC41008A833B /* ChatterBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatterBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		443E9863208BBC41008A833B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
-		443E9865208BBC41008A833B /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
+		443E9865208BBC41008A833B /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
 		443E9868208BBC41008A833B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		443E986A208BBC41008A833B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		443E986D208BBC41008A833B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -29,6 +32,9 @@
 		443E9875208BBCE7008A833B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4444FFF6209230A500E5FFED /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		4444FFF9209231A000E5FFED /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		447610BD20A08333002A6521 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		447610BF20A0848F002A6521 /* NewMessageTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageTableVC.swift; sourceTree = "<group>"; };
+		447610C220A086BD002A6521 /* NewMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageTableViewCell.swift; sourceTree = "<group>"; };
 		5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatterBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEB378B4D4A285CE9B25A602 /* Pods-ChatterBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatterBox.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox.release.xcconfig"; sourceTree = "<group>"; };
 		F897670C7BDBC3FBD0146A6A /* Pods-ChatterBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatterBox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox.debug.xcconfig"; sourceTree = "<group>"; };
@@ -76,8 +82,10 @@
 			isa = PBXGroup;
 			children = (
 				443E9863208BBC41008A833B /* AppDelegate.swift */,
+				447610BC20A08327002A6521 /* Models */,
 				4444FFF82092318E00E5FFED /* Utilities */,
 				4444FFF52092309600E5FFED /* Controllers */,
+				447610C120A086A1002A6521 /* TableViewCells */,
 				4480CD86208BBDA1005A6C75 /* Views */,
 				443E986F208BBC41008A833B /* Info.plist */,
 				443E9877208BBCF0008A833B /* SupportingFiles */,
@@ -97,7 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				4444FFF6209230A500E5FFED /* LoginVC.swift */,
-				443E9865208BBC41008A833B /* MainVC.swift */,
+				443E9865208BBC41008A833B /* MessagesVC.swift */,
+				447610BF20A0848F002A6521 /* NewMessageTableVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -108,6 +117,22 @@
 				4444FFF9209231A000E5FFED /* Extensions.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		447610BC20A08327002A6521 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				447610BD20A08333002A6521 /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		447610C120A086A1002A6521 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				447610C220A086BD002A6521 /* NewMessageTableViewCell.swift */,
+			);
+			path = TableViewCells;
 			sourceTree = "<group>";
 		};
 		4480CD86208BBDA1005A6C75 /* Views */ = {
@@ -265,10 +290,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				443E9866208BBC41008A833B /* MainVC.swift in Sources */,
+				447610C020A0848F002A6521 /* NewMessageTableVC.swift in Sources */,
+				443E9866208BBC41008A833B /* MessagesVC.swift in Sources */,
 				443E9864208BBC41008A833B /* AppDelegate.swift in Sources */,
 				4444FFF7209230A500E5FFED /* LoginVC.swift in Sources */,
+				447610BE20A08333002A6521 /* User.swift in Sources */,
 				4444FFFA209231A000E5FFED /* Extensions.swift in Sources */,
+				447610C320A086BD002A6521 /* NewMessageTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
