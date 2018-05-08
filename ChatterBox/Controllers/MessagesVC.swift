@@ -28,26 +28,28 @@ class MessagesVC: UITableViewController {
     fileprivate func checkIfUserIsLoggedIn() {
         if let uid = Auth.auth().currentUser?.uid {
             
-            Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (dataSnapshot) in
-                
-                guard let snapshot = dataSnapshot.value as? [String : Any] else {
-                    print("Could not convert dataSnapshot elements"); return
-                }
-                
-                let user = User(uid: dataSnapshot.key, dictionary: snapshot)
-                
-                DispatchQueue.main.async {
-                    self.navigationItem.title = user.name
-                }
-                
-            }, withCancel: { (error) in
-                print("MessagesVC/checkIfUserIsLoggedIn: Error: ", error)
-            })
-            
+            self.fethcUserAndUpdateNavBar(fromUID: uid)
             
         } else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
+    }
+    
+    func fethcUserAndUpdateNavBar(fromUID uid: String) {
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+            guard let snapshot = dataSnapshot.value as? [String : Any] else {
+                print("Could not convert dataSnapshot elements"); return
+            }
+            
+            let user = User(uid: dataSnapshot.key, dictionary: snapshot)
+            
+            DispatchQueue.main.async {
+                self.navigationItem.title = user.name
+            }
+            
+        }, withCancel: { (error) in
+            print("MessagesVC/checkIfUserIsLoggedIn: Error: ", error)
+        })
     }
     
     @objc fileprivate func handleLogout() {
@@ -60,6 +62,7 @@ class MessagesVC: UITableViewController {
         }
         
         let loginVC = LoginVC()
+        loginVC.messagesVC = self
         present(loginVC, animated: true, completion: nil)
     }
 }

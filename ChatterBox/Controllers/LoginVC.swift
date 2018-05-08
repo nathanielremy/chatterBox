@@ -12,6 +12,7 @@ import Firebase
 class LoginVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     //MARK: Stored properties
+    var messagesVC: MessagesVC?
     var stackViewHeight: CGFloat = 150
     
     lazy var profileImageView: UIImageView = {
@@ -134,6 +135,9 @@ class LoginVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
                 print("Error loging in: ", error); return
             }
             
+            guard let uid = Auth.auth().currentUser?.uid else { print("No userID returned"); return }
+            
+            self.messagesVC?.fethcUserAndUpdateNavBar(fromUID: uid)
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -184,13 +188,10 @@ class LoginVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
                 print("Error uploading user's values to database: ", error)
             }
             
+            let user = values[Uid] as? [String : Any]
+            self.messagesVC?.navigationItem.title = user!["name"] as? String
             self.dismiss(animated: true, completion: nil)
         })
-        
-        
-        
-        
-        
     }
     
     override func viewDidLoad() {
