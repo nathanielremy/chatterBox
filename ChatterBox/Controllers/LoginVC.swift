@@ -190,6 +190,7 @@ class LoginVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
             
             let user = values[Uid] as? [String : Any]
             self.messagesVC?.navigationItem.title = user!["name"] as? String
+            self.messagesVC?.fethcUserAndUpdateNavBar(fromUID: Uid)
             self.dismiss(animated: true, completion: nil)
         })
     }
