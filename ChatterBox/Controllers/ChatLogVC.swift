@@ -23,12 +23,17 @@ class ChatLogVC: UICollectionViewController {
     }()
     
     @objc fileprivate func handleSend() {
-        print("Handeling Send")
+        guard let text = inputTextField.text, text != "" else {
+            print("InputTextField is empty..."); return
+        }
+        
+        sendMessageWith(text: text)
     }
     
-    let inputTextField: UITextField = {
+    lazy var inputTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Enter message..."
+        tf.delegate = self
         
         return tf
     }()
@@ -60,18 +65,32 @@ class ChatLogVC: UICollectionViewController {
         seperatorView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    fileprivate func sendMessageWith(text: String) {
+        
+        let values: [String : Any] = ["text" : text]
+        
+        let databaseRef = Database.database().reference().child("messages")
+        databaseRef.childByAutoId().updateChildValues(values) { (err, _) in
+            if let error = err {
+                print("Error pushing message node to database: ", error); return
+            }
+        }
+        
+        
+    }
     
     
 }
+
+extension ChatLogVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.isFirstResponder {
+            textField.resignFirstResponder()
+        }
+        
+        return true
+    }
+}
+
+
+
