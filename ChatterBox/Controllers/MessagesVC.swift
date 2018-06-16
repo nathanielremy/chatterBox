@@ -10,6 +10,11 @@ import UIKit
 import Firebase
 
 class MessagesVC: UITableViewController {
+    
+    //MARK: Stored properties
+    let cellId = "cellId"
+    var messages = [Message]()
+    var messagesDictionary = [String : Message]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,18 +23,47 @@ class MessagesVC: UITableViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "new_message_icon"), style: .plain, target: self, action: #selector(handleNewMessage))
+        
+        tableView.register(NewMessageTableViewCell.self, forCellReuseIdentifier: cellId)
+        
+        observeMessages()
+    }
+    
+    func observeMessages() {
+        let databaseRef = Database.database().reference().child("messages")
+        databaseRef.observe(.childAdded, with: { (snapShot) in
+            
+            guard let dictionary = snapShot.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
+            
+            let message = Message(key: snapShot.key, dictionary: dictionary)
+            
+            //Grouping all messages per user
+            self.messagesDictionary[message.toId] = message
+            self.messages = Array(self.messagesDictionary.values)
+            
+            self.messages.sort(by: { (msg1, msg2) -> Bool in
+                return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
+            })
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        }) { (error) in
+            print("Error fetching messages for currentUser", error); return
+        }
     }
     
     @objc fileprivate func handleNewMessage() {
-        let newMessageTableVC = NewMessageTableVC()
-        navigationController?.pushViewController(newMessageTableVC, animated: true)
+        let newMessageVC = NewMessageTableVC()
+        newMessageVC.messagesVC = self
+        let newMessageNavVC = UINavigationController(rootViewController: newMessageVC)
+        self.present(newMessageNavVC, animated: true, completion: nil)
     }
     
     fileprivate func checkIfUserIsLoggedIn() {
         if let uid = Auth.auth().currentUser?.uid {
-            
             self.fethcUserAndUpdateNavBar(fromUID: uid)
-            
         } else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
@@ -80,13 +114,11 @@ class MessagesVC: UITableViewController {
         containerView.addSubview(nameLabel)
         nameLabel.anchor(top: nil, left: imageView.rightAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: 40)
         nameLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-        
-        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
     }
     
-    @objc func showChatController() {
+    func showChatController(forUser user: User) {
         let chatLogVC = ChatLogVC(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogVC.user = user
         navigationController?.pushViewController(chatLogVC, animated: true)
     }
     
@@ -103,5 +135,38 @@ class MessagesVC: UITableViewController {
         loginVC.messagesVC = self
         present(loginVC, animated: true, completion: nil)
     }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! NewMessageTableViewCell
+        
+        let message = self.messages[indexPath.row]
+        Database.fetchUserFromUserID(userID: message.toId) { (userr) in
+            guard let user = userr else { print("Could not fetch user from Database"); return }
+            
+            DispatchQueue.main.async {
+                cell.message = (message, user)
+            }
+        }
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 76
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 

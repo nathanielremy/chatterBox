@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4423F0E720D546FC00F8874A /* message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4423F0E620D546FC00F8874A /* message.swift */; };
 		4435DC4020A0BC09002ED43E /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4435DC3F20A0BC09002ED43E /* CustomImageView.swift */; };
 		443E9864208BBC41008A833B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9863208BBC41008A833B /* AppDelegate.swift */; };
 		443E9866208BBC41008A833B /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443E9865208BBC41008A833B /* MessagesVC.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4423F0E620D546FC00F8874A /* message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = message.swift; sourceTree = "<group>"; };
 		4435DC3F20A0BC09002ED43E /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		443E9860208BBC41008A833B /* ChatterBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatterBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		443E9863208BBC41008A833B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -89,7 +91,6 @@
 				447610BC20A08327002A6521 /* Models */,
 				4444FFF82092318E00E5FFED /* Utilities */,
 				4444FFF52092309600E5FFED /* Controllers */,
-				447610C120A086A1002A6521 /* TableViewCells */,
 				4480CD86208BBDA1005A6C75 /* Views */,
 				443E986F208BBC41008A833B /* Info.plist */,
 				443E9877208BBCF0008A833B /* SupportingFiles */,
@@ -129,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				447610BD20A08333002A6521 /* User.swift */,
+				4423F0E620D546FC00F8874A /* message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -144,6 +146,7 @@
 		4480CD86208BBDA1005A6C75 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				447610C120A086A1002A6521 /* TableViewCells */,
 				443E986C208BBC41008A833B /* LaunchScreen.storyboard */,
 				443E9867208BBC41008A833B /* Main.storyboard */,
 				443E986A208BBC41008A833B /* Assets.xcassets */,
@@ -301,6 +304,7 @@
 				443E9866208BBC41008A833B /* MessagesVC.swift in Sources */,
 				443E9864208BBC41008A833B /* AppDelegate.swift in Sources */,
 				4444FFF7209230A500E5FFED /* LoginVC.swift in Sources */,
+				4423F0E720D546FC00F8874A /* message.swift in Sources */,
 				447610BE20A08333002A6521 /* User.swift in Sources */,
 				4444FFFA209231A000E5FFED /* Extensions.swift in Sources */,
 				4475D2FF20D004E6002D1FAF /* ChatLogVC.swift in Sources */,

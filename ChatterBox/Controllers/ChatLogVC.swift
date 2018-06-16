@@ -12,6 +12,13 @@ import Firebase
 class ChatLogVC: UICollectionViewController {
     
     //MARK: Stored properties
+    var user: User? {
+        didSet {
+            guard let user = user else { print("No user passed to ChatLogVC"); return }
+            navigationItem.title = user.name
+        }
+    }
+    
     lazy var sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Send", for: .normal)
@@ -40,7 +47,6 @@ class ChatLogVC: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Chat Log VC"
         collectionView?.backgroundColor = .white
         setupInputComponents()
     }
@@ -67,7 +73,10 @@ class ChatLogVC: UICollectionViewController {
     
     fileprivate func sendMessageWith(text: String) {
         
-        let values: [String : Any] = ["text" : text]
+        guard let user = self.user else { print("No user passed to ChatLogVC"); return }
+        guard let fromId = Auth.auth().currentUser?.uid else { print("No current userId"); return }
+        
+        let values: [String : Any] = ["text" : text, "toId" : user.uid, "fromId" : fromId, "timeStamp" : Date().timeIntervalSince1970]
         
         let databaseRef = Database.database().reference().child("messages")
         databaseRef.childByAutoId().updateChildValues(values) { (err, _) in
@@ -75,11 +84,7 @@ class ChatLogVC: UICollectionViewController {
                 print("Error pushing message node to database: ", error); return
             }
         }
-        
-        
     }
-    
-    
 }
 
 extension ChatLogVC: UITextFieldDelegate {

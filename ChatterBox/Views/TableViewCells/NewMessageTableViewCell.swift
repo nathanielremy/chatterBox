@@ -11,6 +11,20 @@ import UIKit
 class NewMessageTableViewCell: UITableViewCell {
     
     //MARK: Stored properties
+    var message: (Message?, User?) {
+        didSet {
+            
+            guard let theMessage = message.0, let user = message.1 else {
+                print("No message or user"); return
+            }
+            
+            profileImageView.loadImage(from: user.profileImageURLString)
+            nameLabel.text = user.name
+            emailLabel.text = theMessage.text
+            timeLabel.text = theMessage.timeStamp.timeAgoDisplay()
+        }
+    }
+    
     var user: User? {
         didSet {
             guard let user = user else {
@@ -49,6 +63,15 @@ class NewMessageTableViewCell: UITableViewCell {
         return label
     }()
     
+    let timeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "HH:MM:SS"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .gray
+        
+        return label
+    }()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         backgroundColor = .white
@@ -63,6 +86,10 @@ class NewMessageTableViewCell: UITableViewCell {
         
         addSubview(emailLabel)
         emailLabel.anchor(top: profileImageView.centerYAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
+        
+        addSubview(timeLabel)
+        timeLabel.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: -8, width: 75, height: nil)
+        timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

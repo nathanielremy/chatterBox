@@ -14,13 +14,20 @@ class NewMessageTableVC: UITableViewController {
     //MARK: Stored properties
     let cellId = "cellId"
     var users = [User]()
+    var messagesVC: MessagesVC?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        
         tableView.register(NewMessageTableViewCell.self, forCellReuseIdentifier: cellId)
         fetchUsers()
+    }
+    
+    @objc func handleCancel() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     fileprivate func fetchUsers() {
@@ -66,7 +73,12 @@ class NewMessageTableVC: UITableViewController {
         return 76
     }
     
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.dismiss(animated: true) {
+            let user = self.users[indexPath.row]
+            self.messagesVC?.showChatController(forUser: user)
+        }
+    }
     
     
 }
