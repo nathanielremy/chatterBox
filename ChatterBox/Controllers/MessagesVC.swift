@@ -43,12 +43,14 @@ class MessagesVC: UITableViewController {
                 let message = Message(key: snapShot2.key, dictionary: dictionary)
                 
                 //Grouping all messages per user
-                self.messagesDictionary[message.toId] = message
-                self.messages = Array(self.messagesDictionary.values)
-                
-                self.messages.sort(by: { (msg1, msg2) -> Bool in
-                    return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
-                })
+                if let chatPartnerId = message.chatPartnerId() {
+                    self.messagesDictionary[chatPartnerId] = message
+                    self.messages = Array(self.messagesDictionary.values)
+                    
+                    self.messages.sort(by: { (msg1, msg2) -> Bool in
+                        return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
+                    })
+                }
                 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()

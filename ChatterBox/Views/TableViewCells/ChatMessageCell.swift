@@ -11,12 +11,24 @@ import UIKit
 class ChatMessageCell: UICollectionViewCell {
     
     //MARK: Stored properties
-    let textView: UITextView = {
-        let tf = UITextView()
-        tf.text = "SOME sample TEXT"
-        tf.font = UIFont.systemFont(ofSize: 16)
+    var chatBubbleWidth: NSLayoutConstraint?
+    
+    let chatBubble: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.rgb(r: 0, g: 137, b: 249)
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
         
-        return tf
+        return view
+    }()
+    
+    let textView: UITextView = {
+        let tv = UITextView()
+        tv.font = UIFont.systemFont(ofSize: 16)
+        tv.backgroundColor = .clear
+        tv.textColor = .white
+        
+        return tv
     }()
     
     override init(frame: CGRect) {
@@ -31,9 +43,14 @@ class ChatMessageCell: UICollectionViewCell {
     
     fileprivate func setupViews() {
         
+        addSubview(chatBubble)
         addSubview(textView)
-        textView.anchor(top: self.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: nil)
         
+        chatBubble.anchor(top: self.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: -8, width: nil, height: self.frame.height)
+        chatBubbleWidth = chatBubble.widthAnchor.constraint(equalToConstant: 200)
+        chatBubbleWidth?.isActive = true
+        
+        textView.anchor(top: self.topAnchor, left: chatBubble.leftAnchor, bottom: self.bottomAnchor, right: chatBubble.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: self.frame.height)
         
         
         

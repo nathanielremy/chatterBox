@@ -57,7 +57,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         let button = UIButton(type: .system)
         button.setTitle("Send", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.tintColor = UIColor.mainBlue()
+        button.tintColor = UIColor.rgb(r: 0, g: 137, b: 249)
         button.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         
         return button
@@ -83,6 +83,8 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
+        collectionView?.contentInset = UIEdgeInsetsMake(8, 0, 58, 0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 58, 0)
         
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         
@@ -136,6 +138,8 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                 print("ERROR: ", error)
             }
         }
+        
+        self.inputTextField.text = nil
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -147,12 +151,36 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         
         cell.textView.text = self.messages[indexPath.item].text
         
+        //Modifyig the chat bubble's width
+        if let text = self.messages[indexPath.item].text as? String {
+            cell.chatBubbleWidth?.constant = estimatedFrameForChatBubble(fromText: text).width + 32
+        }
+        
+        
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+        
+        var height: CGFloat = 80
+        
+        //Modifying thr chat bubble's height
+        if let text = self.messages[indexPath.item].text as? String {
+            height = self.estimatedFrameForChatBubble(fromText: text).height + 20
+        }
+        
+        return CGSize(width: view.frame.width, height: height)
     }
+    
+    fileprivate func estimatedFrameForChatBubble(fromText text: String) -> CGRect {
+        // height must be something really tall and width is the same as chatBubble in ChatMEssageCell
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [.font : UIFont.systemFont(ofSize: 16)], context: nil)
+    }
+    
 }
 
 extension ChatLogVC: UITextFieldDelegate {
