@@ -65,7 +65,6 @@ class NewMessageTableViewCell: UITableViewCell {
     
     let timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "HH:MM:SS"
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .gray
         
@@ -88,7 +87,7 @@ class NewMessageTableViewCell: UITableViewCell {
         emailLabel.anchor(top: profileImageView.centerYAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
         
         addSubview(timeLabel)
-        timeLabel.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: -8, width: 75, height: nil)
+        timeLabel.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: -8, width: 100, height: nil)
         timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
     

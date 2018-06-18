@@ -25,34 +25,68 @@ class MessagesVC: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "new_message_icon"), style: .plain, target: self, action: #selector(handleNewMessage))
         
         tableView.register(NewMessageTableViewCell.self, forCellReuseIdentifier: cellId)
-        
-        observeMessages()
     }
     
-    func observeMessages() {
-        let databaseRef = Database.database().reference().child("messages")
-        databaseRef.observe(.childAdded, with: { (snapShot) in
+    func observeUserMessages() {
+        
+        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch currentUserId"); return }
+        
+        let ref = Database.database().reference().child("user-messages").child(currentUserId)
+        ref.observe(.childAdded, with: { (snapShot) in
             
-            guard let dictionary = snapShot.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
-            
-            let message = Message(key: snapShot.key, dictionary: dictionary)
-            
-            //Grouping all messages per user
-            self.messagesDictionary[message.toId] = message
-            self.messages = Array(self.messagesDictionary.values)
-            
-            self.messages.sort(by: { (msg1, msg2) -> Bool in
-                return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
+            let messageId = snapShot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapShot2) in
+                
+                guard let dictionary = snapShot2.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
+                
+                let message = Message(key: snapShot2.key, dictionary: dictionary)
+                
+                //Grouping all messages per user
+                self.messagesDictionary[message.toId] = message
+                self.messages = Array(self.messagesDictionary.values)
+                
+                self.messages.sort(by: { (msg1, msg2) -> Bool in
+                    return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
+                })
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                
+            }, withCancel: { (error) in
+                print("ERROR: ", error); return
             })
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-            
         }) { (error) in
-            print("Error fetching messages for currentUser", error); return
+            print("ERROR: ", error); return
         }
     }
+    
+//    func observeMessages() {
+//        let databaseRef = Database.database().reference().child("messages")
+//        databaseRef.observe(.childAdded, with: { (snapShot) in
+//
+//            guard let dictionary = snapShot.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
+//
+//            let message = Message(key: snapShot.key, dictionary: dictionary)
+//
+//            //Grouping all messages per user
+//            self.messagesDictionary[message.toId] = message
+//            self.messages = Array(self.messagesDictionary.values)
+//
+//            self.messages.sort(by: { (msg1, msg2) -> Bool in
+//                return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
+//            })
+//
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
+//
+//        }) { (error) in
+//            print("Error fetching messages for currentUser", error); return
+//        }
+//    }
     
     @objc fileprivate func handleNewMessage() {
         let newMessageVC = NewMessageTableVC()
@@ -85,6 +119,12 @@ class MessagesVC: UITableViewController {
     }
     
     fileprivate func setupUserNavBar(user: User) {
+        self.messages.removeAll()
+        self.messagesDictionary.removeAll()
+        self.tableView.reloadData()
+        
+        observeUserMessages()
+        
         let containerView = UIView()
         
         let titleView = UIView()
@@ -144,14 +184,16 @@ class MessagesVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! NewMessageTableViewCell
         
         let message = self.messages[indexPath.row]
-        Database.fetchUserFromUserID(userID: message.toId) { (userr) in
-            guard let user = userr else { print("Could not fetch user from Database"); return }
-            
-            DispatchQueue.main.async {
-                cell.message = (message, user)
+        
+        if let uId = message.chatPartnerId() {
+            Database.fetchUserFromUserID(userID: uId) { (userr) in
+                guard let user = userr else { print("Could not fetch user from Database"); return }
+                
+                DispatchQueue.main.async {
+                    cell.message = (message, user)
+                }
             }
         }
-        
         return cell
     }
     
@@ -159,14 +201,18 @@ class MessagesVC: UITableViewController {
         return 76
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let message = self.messages[indexPath.row]
+        
+        //Select correct user to show in ChatLogVC
+        guard let uId = message.chatPartnerId() else { print("No chat partner Id"); return }
+        Database.fetchUserFromUserID(userID: uId) { (userr) in
+            guard let user = userr else { print("No user returned from database"); return }
+            
+            DispatchQueue.main.async {
+                self.showChatController(forUser: user)
+            }
+        }
+    }
 }
 

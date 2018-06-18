@@ -9,14 +9,48 @@
 import UIKit
 import Firebase
 
-class ChatLogVC: UICollectionViewController {
+class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     //MARK: Stored properties
+    let cellId = "cellId"
+    var messages = [Message]()
+    
     var user: User? {
         didSet {
             guard let user = user else { print("No user passed to ChatLogVC"); return }
             navigationItem.title = user.name
+            observeMessages(forUser: user)
         }
+    }
+    
+    func observeMessages(forUser user: User) {
+        guard let userId = Auth.auth().currentUser?.uid else { print("No current user id"); return }
+        let userMessagesRef = Database.database().reference().child("user-messages").child(userId)
+        userMessagesRef.observe(.childAdded, with: { (snapshot) in
+            
+            let messageId = snapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let dictionary = snapshot.value as? [String : Any] else { return }
+                let message = Message(key: snapshot.key, dictionary: dictionary)
+                
+                if message.chatPartnerId() == self.user?.uid {
+                    self.messages.append(message)
+                    
+                    DispatchQueue.main.async {
+                        self.collectionView?.reloadData()
+                    }
+                }
+                
+            }, withCancel: { (nil) in
+                return
+            })
+            
+        }) { (error) in
+            print("Error fetching user-messages for user: \(userId): ", error); return
+        }
+        
     }
     
     lazy var sendButton: UIButton = {
@@ -48,6 +82,10 @@ class ChatLogVC: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
+        collectionView?.alwaysBounceVertical = true
+        
+        collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
+        
         setupInputComponents()
     }
     
@@ -73,17 +111,47 @@ class ChatLogVC: UICollectionViewController {
     
     fileprivate func sendMessageWith(text: String) {
         
-        guard let user = self.user else { print("No user passed to ChatLogVC"); return }
+        guard let toId = self.user?.uid else { print("No user passed to ChatLogVC"); return }
         guard let fromId = Auth.auth().currentUser?.uid else { print("No current userId"); return }
         
-        let values: [String : Any] = ["text" : text, "toId" : user.uid, "fromId" : fromId, "timeStamp" : Date().timeIntervalSince1970]
+        let values: [String : Any] = ["text" : text, "toId" : toId, "fromId" : fromId, "timeStamp" : Date().timeIntervalSince1970]
         
         let databaseRef = Database.database().reference().child("messages")
-        databaseRef.childByAutoId().updateChildValues(values) { (err, _) in
+        let childRef = databaseRef.childByAutoId()
+        childRef.updateChildValues(values) { (err, _) in
             if let error = err {
                 print("Error pushing message node to database: ", error); return
             }
         }
+        
+        let messageId = childRef.key
+        let userMessagesRef = Database.database().reference().child("user-messages").child(fromId)
+        userMessagesRef.updateChildValues([messageId : 1]) { (err, _) in
+            if let error = err { print("Error: ", error); return }
+        }
+        
+        let recipientRef = Database.database().reference().child("user-messages").child(toId)
+        recipientRef.updateChildValues([messageId: 1]) { (err, _) in
+            if let error = err {
+                print("ERROR: ", error)
+            }
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.messages.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
+        
+        cell.textView.text = self.messages[indexPath.item].text
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 80)
     }
 }
 
@@ -92,10 +160,31 @@ extension ChatLogVC: UITextFieldDelegate {
         if textField.isFirstResponder {
             textField.resignFirstResponder()
         }
-        
         return true
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -21,6 +21,7 @@
 		447610BE20A08333002A6521 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447610BD20A08333002A6521 /* User.swift */; };
 		447610C020A0848F002A6521 /* NewMessageTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447610BF20A0848F002A6521 /* NewMessageTableVC.swift */; };
 		447610C320A086BD002A6521 /* NewMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447610C220A086BD002A6521 /* NewMessageTableViewCell.swift */; };
+		4488D53720D7D83700D9AAF7 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4488D53620D7D83700D9AAF7 /* ChatMessageCell.swift */; };
 		D1A5D8435E7FC5F3ADD704CC /* Pods_ChatterBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		447610BD20A08333002A6521 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		447610BF20A0848F002A6521 /* NewMessageTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageTableVC.swift; sourceTree = "<group>"; };
 		447610C220A086BD002A6521 /* NewMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageTableViewCell.swift; sourceTree = "<group>"; };
+		4488D53620D7D83700D9AAF7 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		5C3D5805635930A329D5E944 /* Pods_ChatterBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatterBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEB378B4D4A285CE9B25A602 /* Pods-ChatterBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatterBox.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox.release.xcconfig"; sourceTree = "<group>"; };
 		F897670C7BDBC3FBD0146A6A /* Pods-ChatterBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatterBox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatterBox/Pods-ChatterBox.debug.xcconfig"; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				447610C220A086BD002A6521 /* NewMessageTableViewCell.swift */,
+				4488D53620D7D83700D9AAF7 /* ChatMessageCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				4444FFF7209230A500E5FFED /* LoginVC.swift in Sources */,
 				4423F0E720D546FC00F8874A /* message.swift in Sources */,
 				447610BE20A08333002A6521 /* User.swift in Sources */,
+				4488D53720D7D83700D9AAF7 /* ChatMessageCell.swift in Sources */,
 				4444FFFA209231A000E5FFED /* Extensions.swift in Sources */,
 				4475D2FF20D004E6002D1FAF /* ChatLogVC.swift in Sources */,
 				447610C320A086BD002A6521 /* NewMessageTableViewCell.swift in Sources */,
