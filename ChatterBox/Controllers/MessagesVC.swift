@@ -15,6 +15,7 @@ class MessagesVC: UITableViewController {
     let cellId = "cellId"
     var messages = [Message]()
     var messagesDictionary = [String : Message]()
+    var timer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,9 +53,9 @@ class MessagesVC: UITableViewController {
                     })
                 }
                 
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+                //Solution to only reload tableView once
+                self.timer?.invalidate()
+                self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.handleReloadTableView), userInfo: nil, repeats: false)
                 
             }, withCancel: { (error) in
                 print("ERROR: ", error); return
@@ -65,30 +66,12 @@ class MessagesVC: UITableViewController {
         }
     }
     
-//    func observeMessages() {
-//        let databaseRef = Database.database().reference().child("messages")
-//        databaseRef.observe(.childAdded, with: { (snapShot) in
-//
-//            guard let dictionary = snapShot.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
-//
-//            let message = Message(key: snapShot.key, dictionary: dictionary)
-//
-//            //Grouping all messages per user
-//            self.messagesDictionary[message.toId] = message
-//            self.messages = Array(self.messagesDictionary.values)
-//
-//            self.messages.sort(by: { (msg1, msg2) -> Bool in
-//                return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
-//            })
-//
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//            }
-//
-//        }) { (error) in
-//            print("Error fetching messages for currentUser", error); return
-//        }
-//    }
+    @objc func handleReloadTableView() {
+        DispatchQueue.main.async {
+            print("Table reloaded")
+            self.tableView.reloadData()
+        }
+    }
     
     @objc fileprivate func handleNewMessage() {
         let newMessageVC = NewMessageTableVC()

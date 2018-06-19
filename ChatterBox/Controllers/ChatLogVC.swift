@@ -40,6 +40,8 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                     
                     DispatchQueue.main.async {
                         self.collectionView?.reloadData()
+                        //Make collectionView scroll to bottom when message is sent and/or recieved
+                        self.collectionView?.scrollToItem(at: IndexPath(item: self.messages.count - 1, section: 0), at: .bottom, animated: true)
                     }
                 }
                 
@@ -149,16 +151,41 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         
-        cell.textView.text = self.messages[indexPath.item].text
+        let message = self.messages[indexPath.item]
+        
+        cell.textView.text = message.text
+        
+        setupChatMessageCell(cell: cell, message: message)
         
         //Modifyig the chat bubble's width
         if let text = self.messages[indexPath.item].text as? String {
             cell.chatBubbleWidth?.constant = estimatedFrameForChatBubble(fromText: text).width + 32
         }
         
-        
-        
         return cell
+    }
+    
+    fileprivate func setupChatMessageCell(cell: ChatMessageCell, message: Message) {
+        
+        if let profileImageURLString = self.user?.profileImageURLString {
+            cell.profileImageView.loadImage(from: profileImageURLString)
+        }
+        
+        if message.fromId == Auth.auth().currentUser?.uid {
+            //Display blue chatBubble
+            cell.chatBubble.backgroundColor = UIColor.rgb(r: 0, g: 137, b: 249)
+            cell.textView.textColor = .white
+            cell.profileImageView.isHidden = true
+            cell.chatBubbleLeftAnchor?.isActive = false
+            cell.chatBubbleRightAnchor?.isActive = true
+        } else {
+            //Display gray chatBubble
+            cell.chatBubble.backgroundColor = UIColor.rgb(r: 240, g: 240, b: 240)
+            cell.textView.textColor = .black
+            cell.profileImageView.isHidden = false
+            cell.chatBubbleLeftAnchor?.isActive = true
+            cell.chatBubbleRightAnchor?.isActive = false
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
