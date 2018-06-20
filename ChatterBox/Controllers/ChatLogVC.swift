@@ -14,6 +14,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     //MARK: Stored properties
     let cellId = "cellId"
     var messages = [Message]()
+    var containerViewBottomAnchor: NSLayoutConstraint?
     
     var user: User? {
         didSet {
@@ -85,6 +86,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
+        collectionView?.keyboardDismissMode = .interactive
         collectionView?.contentInset = UIEdgeInsetsMake(8, 0, 58, 0)
         collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 58, 0)
         
@@ -93,12 +95,54 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         setupInputComponents()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupKeyBoardObservers()
+    }
+    
+    //Never forget to remove observers
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func setupKeyBoardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyBoardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyBoardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc func handleKeyBoardWillShow(notifaction: NSNotification) {
+        //Get the height of the keyBoard
+        let keyBoardFrame = (notifaction.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+        let keyBoardDuration: Double = (notifaction.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        if let height = keyBoardFrame?.height {
+            self.containerViewBottomAnchor?.constant = -height + view.safeAreaInsets.bottom
+            //Animate the containerView going up
+            UIView.animate(withDuration: keyBoardDuration) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    @objc func handleKeyBoardWillHide(notifaction: NSNotification) {
+        //Move the keyboard back down
+        let keyBoardDuration: Double = (notifaction.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        self.containerViewBottomAnchor?.constant = 0
+        //Animate the containerView going down
+        UIView.animate(withDuration: keyBoardDuration) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     fileprivate func setupInputComponents() {
         let containerView = UIView()
         containerView.backgroundColor = .white
         
         view.addSubview(containerView)
-        containerView.anchor(top: nil, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 50)
+        containerView.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 50)
+        containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        containerViewBottomAnchor?.isActive = true
         
         containerView.addSubview(sendButton)
         sendButton.anchor(top: containerView.topAnchor, left: nil, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 80, height: nil)
@@ -110,8 +154,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         seperatorView.backgroundColor = .black
         
         containerView.addSubview(seperatorView)
-        seperatorView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
-    }
+        seperatorView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)    }
     
     fileprivate func sendMessageWith(text: String) {
         
