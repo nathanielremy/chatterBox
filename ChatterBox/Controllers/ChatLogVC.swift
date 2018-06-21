@@ -26,7 +26,8 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     
     func observeMessages(forUser user: User) {
         guard let userId = Auth.auth().currentUser?.uid else { print("No current user id"); return }
-        let userMessagesRef = Database.database().reference().child("user-messages").child(userId)
+        guard let chatPartnerId = self.user?.uid else { print("No user in stored property"); return }
+        let userMessagesRef = Database.database().reference().child("user-messages").child(userId).child(chatPartnerId)
         userMessagesRef.observe(.childAdded, with: { (snapshot) in
             
             let messageId = snapshot.key
@@ -45,11 +46,9 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                         self.collectionView?.scrollToItem(at: IndexPath(item: self.messages.count - 1, section: 0), at: .bottom, animated: true)
                     }
                 }
-                
             }, withCancel: { (nil) in
                 return
             })
-            
         }) { (error) in
             print("Error fetching user-messages for user: \(userId): ", error); return
         }
@@ -172,12 +171,12 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         }
         
         let messageId = childRef.key
-        let userMessagesRef = Database.database().reference().child("user-messages").child(fromId)
+        let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
         userMessagesRef.updateChildValues([messageId : 1]) { (err, _) in
             if let error = err { print("Error: ", error); return }
         }
         
-        let recipientRef = Database.database().reference().child("user-messages").child(toId)
+        let recipientRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
         recipientRef.updateChildValues([messageId: 1]) { (err, _) in
             if let error = err {
                 print("ERROR: ", error)

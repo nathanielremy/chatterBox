@@ -26,51 +26,73 @@ class MessagesVC: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "new_message_icon"), style: .plain, target: self, action: #selector(handleNewMessage))
         
         tableView.register(NewMessageTableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.allowsSelectionDuringEditing = true
     }
     
     func observeUserMessages() {
-        
         guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch currentUserId"); return }
         
         let ref = Database.database().reference().child("user-messages").child(currentUserId)
         ref.observe(.childAdded, with: { (snapShot) in
             
-            let messageId = snapShot.key
-            let messagesRef = Database.database().reference().child("messages").child(messageId)
-            messagesRef.observeSingleEvent(of: .value, with: { (snapShot2) in
+            let userId = snapShot.key
+            let userRef = Database.database().reference().child("user-messages").child(currentUserId).child(userId)
+            userRef.observe(.childAdded, with: { (snapshot2) in
                 
-                guard let dictionary = snapShot2.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
-                
-                let message = Message(key: snapShot2.key, dictionary: dictionary)
-                
-                //Grouping all messages per user
-                if let chatPartnerId = message.chatPartnerId() {
-                    self.messagesDictionary[chatPartnerId] = message
-                    self.messages = Array(self.messagesDictionary.values)
-                    
-                    self.messages.sort(by: { (msg1, msg2) -> Bool in
-                        return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
-                    })
-                }
-                
-                //Solution to only reload tableView once
-                self.timer?.invalidate()
-                self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.handleReloadTableView), userInfo: nil, repeats: false)
+                let messageId = snapshot2.key
+                self.fetchMessage(withMessageId: messageId)
                 
             }, withCancel: { (error) in
-                print("ERROR: ", error); return
+                print("Error fetching messages: ", error); return
             })
-            
         }) { (error) in
             print("ERROR: ", error); return
         }
+        
+        ref.observe(.childRemoved, with: { (snapshot3) in
+            self.messagesDictionary.removeValue(forKey: snapshot3.key)
+            self.attemptReloadTable()
+        }) { (error) in
+            print("Error fetching data when child removed: ", error); return
+        }
+    }
+    
+    fileprivate func attemptReloadTable() {
+        //Solution to only reload tableView once
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.handleReloadTableView), userInfo: nil, repeats: false)
     }
     
     @objc func handleReloadTableView() {
+        self.messages = Array(self.messagesDictionary.values)
+        self.messages.sort(by: { (msg1, msg2) -> Bool in
+            return Double(msg1.timeStamp.timeIntervalSince1970) > Double(msg2.timeStamp.timeIntervalSince1970)
+        })
+        
         DispatchQueue.main.async {
-            print("Table reloaded")
             self.tableView.reloadData()
         }
+    }
+    
+    fileprivate func fetchMessage(withMessageId messageId: String) {
+        let messagesRef = Database.database().reference().child("messages").child(messageId)
+        messagesRef.observeSingleEvent(of: .value, with: { (snapShot3) in
+            
+            guard let dictionary = snapShot3.value as? [String : Any] else { print("snapShot not convertible to [String : Any]"); return }
+            
+            let message = Message(key: snapShot3.key, dictionary: dictionary)
+            
+            //Grouping all messages per user
+            if let chatPartnerId = message.chatPartnerId() {
+                self.messagesDictionary[chatPartnerId] = message
+            }
+            
+            //Solution to only reload tableView once
+            self.attemptReloadTable()
+            
+        }, withCancel: { (error) in
+            print("ERROR: ", error); return
+        })
     }
     
     @objc fileprivate func handleNewMessage() {
@@ -159,6 +181,29 @@ class MessagesVC: UITableViewController {
         let loginVC = LoginVC()
         loginVC.messagesVC = self
         present(loginVC, animated: true, completion: nil)
+    }
+    
+    //Enable the tableView to delete messages
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    //What happens when user hits delete
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch current user Id"); return }
+        guard let chatParterId = self.messages[indexPath.row].chatPartnerId() else { print("Could not fetch chatPartnerId"); return }
+        
+        let deleteRef = Database.database().reference().child("user-messages").child(currentUserId).child(chatParterId)
+        deleteRef.removeValue { (err, _) in
+            if let error = err {
+                print("Error deleting value from database: ", error)
+                return
+            }
+            
+            self.messagesDictionary.removeValue(forKey: chatParterId)
+            self.attemptReloadTable()
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
